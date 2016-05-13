@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="bitcamp.pms.dao.MemberDao">
+  <sql id="select01">
+    select MNO, MNAME, EMAIL, PWD, TEL 
+    from MEMBERS
+  </sql>
+
+  <resultMap type="Member" id="MemberMap">
+    <id     column="MNO"    property="no"/>
+    <result column="MNAME"  property="name"/>
+    <result column="PWD"    property="password"/>
+  </resultMap>
+  
+  <insert id="insert" parameterType="Member">
+    insert into MEMBERS(MNAME,EMAIL,PWD,TEL)
+    values(#{name},#{email},#{password},#{tel})
+  </insert>
+  
+  <update id="update" parameterType="Member">
+    update MEMBERS set
+      MNAME=#{name},
+      EMAIL=#{email},
+      TEL=#{tel}
+    where MNO=#{no}
+  </update>
+  
+  <delete id="delete" parameterType="int">
+    delete from MEMBERS
+    where MNO=#{no}
+  </delete>
+
+  <select id="selectList" resultMap="MemberMap">
+    <include refid="select01"/>
+    order by MNAME asc
+  </select>
+  
+  <select id="selectOne" parameterType="map" resultMap="MemberMap">
+    <include refid="select01"/>
+    where 
+    <if test="no != null">
+      MNO=#{no}
+    </if>
+    <if test="email != null">
+      EMAIL=#{email}
+    </if>
+  </select>
+  
+  <select id="isMember" parameterType="map" resultType="int">
+    select count(*) 
+    from MEMBERS
+    where EMAIL=#{email} and PWD=#{password}
+  </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
